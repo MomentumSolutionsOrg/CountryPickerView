@@ -125,7 +125,7 @@ public class CountryPickerView: NibView {
         flagImageView.image = selectedCountry.flag
         countryDetailsLabel.font = font
         countryDetailsLabel.textColor = textColor
-        countryDetailsLabel.text = "(\(selectedCountry.phoneCode)\u{202C}"
+        countryDetailsLabel.text = "\(selectedCountry.phoneCode)\u{202C}"
         /*if showCountryCodeInView && showPhoneCodeInView {
             countryDetailsLabel.text = "(\(selectedCountry.code)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
         } else if showCountryNameInView && showPhoneCodeInView {
