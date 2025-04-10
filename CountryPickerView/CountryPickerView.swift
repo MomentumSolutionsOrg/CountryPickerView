@@ -37,7 +37,7 @@ public func !=(lhs: Country, rhs: Country) -> Bool {
 
 
 public class CountryPickerView: NibView {
-    @IBOutlet weak var spacingConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var spacingConstraint: NSLayoutConstraint!
     @IBOutlet public weak var flagImageView: UIImageView! {
         didSet {
             flagImageView.clipsToBounds = true
@@ -84,14 +84,14 @@ public class CountryPickerView: NibView {
     }
     
     /// The spacing between the flag image and the text.
-    public var flagSpacingInView: CGFloat {
-        get {
-            return spacingConstraint.constant
-        }
-        set {
-            spacingConstraint.constant = newValue
-        }
-    }
+//    public var flagSpacingInView: CGFloat {
+//        get {
+////            return spacingConstraint.constant
+//        }
+//        set {
+////            spacingConstraint.constant = newValue
+//        }
+//    }
     
     weak public var dataSource: CountryPickerViewDataSource?
     weak public var delegate: CountryPickerViewDelegate?
@@ -125,7 +125,8 @@ public class CountryPickerView: NibView {
         flagImageView.image = selectedCountry.flag
         countryDetailsLabel.font = font
         countryDetailsLabel.textColor = textColor
-        if showCountryCodeInView && showPhoneCodeInView {
+        countryDetailsLabel.text = "(\(selectedCountry.phoneCode)\u{202C}"
+        /*if showCountryCodeInView && showPhoneCodeInView {
             countryDetailsLabel.text = "(\(selectedCountry.code)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
         } else if showCountryNameInView && showPhoneCodeInView {
             countryDetailsLabel.text = "(\(selectedCountry.localizedName() ?? selectedCountry.name)) \u{202A}\(selectedCountry.phoneCode)\u{202C}"
@@ -135,7 +136,7 @@ public class CountryPickerView: NibView {
                 : selectedCountry.localizedName() ?? selectedCountry.name
         } else {
             countryDetailsLabel.text = nil
-        }
+        }*/
     }
     
     @IBAction func openCountryPickerController(_ sender: Any) {
@@ -156,6 +157,20 @@ public class CountryPickerView: NibView {
     public func showCountriesList(from viewController: UIViewController) {
         let countryVc = CountryPickerViewController(style: .grouped)
         countryVc.countryPickerView = self
+        let navigationVC = UINavigationController(rootViewController: countryVc)
+        navigationVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = navigationVC.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+
+        delegate?.countryPickerView(self, willShow: countryVc)
+        viewController.present(navigationVC, animated: true) {
+            self.delegate?.countryPickerView(self, didShow: countryVc)
+        }
+        /*
         if let viewController = viewController as? UINavigationController {
             delegate?.countryPickerView(self, willShow: countryVc)
             viewController.pushViewController(countryVc, animated: true) {
@@ -167,9 +182,9 @@ public class CountryPickerView: NibView {
             viewController.present(navigationVC, animated: true) {
                 self.delegate?.countryPickerView(self, didShow: countryVc)
             }
-        }
+        }*/
     }
-    
+
     public let countries: [Country] = {
         var countries = [Country]()
         // Cocoapods || SPM
