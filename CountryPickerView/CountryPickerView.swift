@@ -13,7 +13,6 @@ public typealias CPVCountry = Country
 public enum SearchBarPosition {
     case tableViewHeader, navigationBar, hidden
 }
-
 public struct Country: Equatable {
     public let name: String
     public let code: String
@@ -40,6 +39,7 @@ public class CountryPickerView: NibView {
 //    @IBOutlet weak var spacingConstraint: NSLayoutConstraint!
     @IBOutlet public weak var flagImageView: UIImageView! {
         didSet {
+            print("its last version")
             flagImageView.clipsToBounds = true
             flagImageView.layer.masksToBounds = true
             flagImageView.layer.cornerRadius = 2
