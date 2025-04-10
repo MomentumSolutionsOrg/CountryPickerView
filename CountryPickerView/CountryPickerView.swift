@@ -160,29 +160,32 @@ public class CountryPickerView: NibView {
         let navigationVC = UINavigationController(rootViewController: countryVc)
         navigationVC.modalPresentationStyle = .pageSheet
 
-        if let sheet = navigationVC.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        }
-
-        delegate?.countryPickerView(self, willShow: countryVc)
-        viewController.present(navigationVC, animated: true) {
-            self.delegate?.countryPickerView(self, didShow: countryVc)
-        }
-        /*
-        if let viewController = viewController as? UINavigationController {
-            delegate?.countryPickerView(self, willShow: countryVc)
-            viewController.pushViewController(countryVc, animated: true) {
-                self.delegate?.countryPickerView(self, didShow: countryVc)
+        if #available(iOS 15.0, *) {
+            if let sheet = navigationVC.sheetPresentationController {
+                sheet.detents = [.medium(), .large()]
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             }
-        } else {
-            let navigationVC = UINavigationController(rootViewController: countryVc)
             delegate?.countryPickerView(self, willShow: countryVc)
             viewController.present(navigationVC, animated: true) {
                 self.delegate?.countryPickerView(self, didShow: countryVc)
             }
-        }*/
+        } else {
+            if let viewController = viewController as? UINavigationController {
+                delegate?.countryPickerView(self, willShow: countryVc)
+                viewController.pushViewController(countryVc, animated: true) {
+                    self.delegate?.countryPickerView(self, didShow: countryVc)
+                }
+            } else {
+                let navigationVC = UINavigationController(rootViewController: countryVc)
+                delegate?.countryPickerView(self, willShow: countryVc)
+                viewController.present(navigationVC, animated: true) {
+                    self.delegate?.countryPickerView(self, didShow: countryVc)
+                }
+            }
+        }
+
+       
     }
 
     public let countries: [Country] = {
